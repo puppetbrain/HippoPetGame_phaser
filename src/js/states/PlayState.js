@@ -1,25 +1,9 @@
-var GameState = {
-
-  //initiate game settings
-  init: function(){
-    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
-
-    this.scale.pageAlignHorizontally = true
-    this.scale.pageAlignVertically = true
-  },
-
-  //load game assets
-  preload: function() {
-    this.load.image('background', 'images/background.png')
-    this.load.image('rotateBtn', 'images/button_rotate.png')
-    this.load.image('broccoli', 'images/broccoli.png')
-    this.load.image('meat', 'images/meat.png')
-    this.load.spritesheet('hippoEat', 'images/hippo_eat_sprite.png', 195, 150, 4)
-  },
+var PlayState = {
 
   //execute everything
   create: function() {
     this.background = this.game.add.sprite(0,0, 'background')
+    this.health = this.game.add.sprite(120, 10, 'health')
     this.broccoli = this.game.add.sprite(50,550, 'broccoli')
     this.broccoli.anchor.setTo(0.5)
     this.meat = this.game.add.sprite(150,550, 'meat')
@@ -60,6 +44,21 @@ var GameState = {
     //if nothing selected
     this.selectedItem = null
     this.uiBlocked = false
+
+    var style = {
+      font: '20px Arial',
+      fill: 'white'
+    }
+    this.game.add.text(10, 20, 'Health:', style)
+    this.game.add.text(10, 100, 'Fun:', style)
+
+    this.healthText = this.game.add.text(80, 20, '', style)
+    this.funText = this.game.add.text(80, 100, '', style)
+
+    this.refreshStats()
+
+    //decrease health every 5 seconds
+    this.statsDecreaser = this.game.time.events.loop(Phaser.Timer.SECOND * 5, this.reduceProperties, this)
   },
 
   pickItem: function(sprite, event) {
@@ -86,7 +85,10 @@ var GameState = {
       this.uiBlocked = false
       sprite.alpha = 1
       this.hippo.customProperties.fun -= 10 
-      console.log(this.hippo.customProperties.fun)
+     
+     //update visuals for the stats
+     this.refreshStats()
+     
     }, this)
     hippoRotation.start()
     }
@@ -104,7 +106,6 @@ placeItem: function(sprite, event) {
   if(this.selectedItem && !this.uiBlocked) {
     var x = event.position.x
     var y = event.position.y
-
     var newItem = this.game.add.sprite(x, y, this.selectedItem.key)
     newItem.anchor.setTo(0.5)
     newItem.customProperties = this.selectedItem.customProperties
@@ -131,11 +132,35 @@ placeItem: function(sprite, event) {
          this.hippo.customProperties[stat] += newItem.customProperties[stat]
        }
      }
+
+     //update visuals for the stats
+     this.refreshStats()
+
    }, this)
    hippoMovement.start()
-  }
+    }
   },
-  
+  refreshStats: function() {
+    this.healthText.text = this.hippo.customProperties.health
+    this.funText.text = this.hippo.customProperties.fun
+  },
+  reduceProperties: function() {
+    this.hippo.customProperties.health -= 10
+    this.refreshStats()
+  },
+
+  update: function() {
+    if(this.hippo.customProperties.health <= 0 || this.hippo.customProperties.fun <= 0) {
+      this.hippo.frame = 4
+      this.uiBlocked = true
+
+      this.game.time.events.add(2000, this.gameOver, this)
+      }
+    },
+  gameOver: function()  {
+    this.game.state.restart()
+    },
+
   handleDragStart: function(sprite) {
     console.log('drag start')
     console.log(sprite)
@@ -149,10 +174,3 @@ placeItem: function(sprite, event) {
   }
 
 };
-
-
-//initiate Phaser framework
-var game = new Phaser.Game(360, 640, Phaser.AUTO)
-
-game.state.add('GameState', GameState)
-game.state.start('GameState')
