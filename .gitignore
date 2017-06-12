@@ -1,0 +1,12 @@
+node_modules/
+
+.vscode
+.idea/
+
+.sass-cache/
+.log
+.lock
+.tmp
+
+.DS_Store
+Thumbs.db
