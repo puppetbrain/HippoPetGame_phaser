@@ -1,7 +1,5 @@
 var GameState = {
 
-  myName: 'Bummy', 
-
   //initiate game settings
   init: function(){
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
@@ -13,11 +11,10 @@ var GameState = {
   //load game assets
   preload: function() {
     this.load.image('background', 'images/background.png')
-    // this.load.image('hippo', 'images/hippo.png');
     this.load.image('rotateBtn', 'images/button_rotate.png')
     this.load.image('broccoli', 'images/broccoli.png')
     this.load.image('meat', 'images/meat.png')
-    this.load.spritesheet('hippo', 'images/hippo_sprite.png', 195, 150, 4)
+    this.load.spritesheet('hippoEat', 'images/hippo_eat_sprite.png', 195, 150, 4)
   },
 
   //execute everything
@@ -27,12 +24,13 @@ var GameState = {
     this.broccoli.anchor.setTo(0.5)
     this.meat = this.game.add.sprite(150,550, 'meat')
     this.meat.anchor.setTo(0.5)
-    this.hippo = this.game.add.sprite(200, 450, 'hippo')
+    this.hippo = this.game.add.sprite(200, 450, 'hippoEat')
     this.hippo.anchor.setTo(0.5)
     this.rotateBtn = this.game.add.sprite(250, 550, 'rotateBtn')
     this.rotateBtn.anchor.setTo(0.5)
 
-    console.log(`My name is ${this.myName}`)
+    //spritesheet animation
+    this.hippo.animations.add('hippoEat',[0, 1, 2, 3], 12, false)
 
     //hippo properties
     this.hippo.customProperties = {health: 100, fun: 100}
@@ -118,7 +116,21 @@ placeItem: function(sprite, event) {
    game.world.bringToTop(this.hippo)
    hippoMovement.to({x: toX, angle: '+360', y:y}, 700)
    hippoMovement.onComplete.add(function() { 
+     
+     newItem.destroy() 
+
+     //play eat animation
+     this.hippo.animations.play('hippoEat')
+
      this.uiBlocked = false
+
+     var stat;
+     for(stat in newItem.customProperties) {
+       if(newItem.customProperties.hasOwnProperty(stat)) {
+          console.log(stat)
+         this.hippo.customProperties[stat] += newItem.customProperties[stat]
+       }
+     }
    }, this)
    hippoMovement.start()
   }
