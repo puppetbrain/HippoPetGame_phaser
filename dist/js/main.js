@@ -60,17 +60,6 @@ var GameState = {
     this.rotateBtn = this.game.add.sprite(250, 550, 'rotateBtn')
     this.rotateBtn.anchor.setTo(0.5)
 
-    // NEW EAT FUNCTION
-
-    //
-
-
-    //
-
-    //
-
-  //
-
     console.log(`My name is ${this.myName}`)
 
     //hippo properties
