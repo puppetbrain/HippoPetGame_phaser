@@ -89,13 +89,15 @@ gulp.task('css', ['images'], function() {
 // JS
 gulp.task('js', function() {
   let jsbuild = gulp.src([
-    folder.src + 'js/phaser.min.js',
-    // 'node_modules/build/phaser-ce/build/phaser.min.js',
-    folder.src + 'js/main.js',
-    folder.src + 'js/test.js'
+    'node_modules/phaser/build/phaser.min.js',
+    folder.src + 'js/states/BootState.js',
+    folder.src + 'js/states/LoadState.js',
+    folder.src + 'js/states/TitleState.js',
+    folder.src + 'js/states/PlayState.js',
+    folder.src + 'js/app.js',
   ])
     .pipe(prettyerror())
-    .pipe(concat('main.js'))
+    .pipe(concat('app.js'))
   ;
 
   if (isProductionMode) {
