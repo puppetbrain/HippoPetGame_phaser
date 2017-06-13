@@ -11,12 +11,14 @@ var LoadState = {
     this.load.image('health', 'images/health.png')
     this.load.image('rotateBtn', 'images/button_rotate.png')
     this.load.image('broccoli', 'images/broccoli.png')
+    this.load.image('ham', 'images/ham.png')
+    this.load.image('chili', 'images/chili.png')
     this.load.image('meat', 'images/meat.png')
     this.load.spritesheet('hippoEat', 'images/hippo_eat_sprite.png', 181, 150, 5)
   },
 
   create: function() {
     // actually should go to title state
-    // this.state.start('PlayState')
+    this.state.start('TitleState')
   }
 }

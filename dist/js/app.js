@@ -58,17 +58,35 @@ var LoadState = {
     this.load.image('health', 'images/health.png')
     this.load.image('rotateBtn', 'images/button_rotate.png')
     this.load.image('broccoli', 'images/broccoli.png')
+    this.load.image('ham', 'images/ham.png')
+    this.load.image('chili', 'images/chili.png')
     this.load.image('meat', 'images/meat.png')
     this.load.spritesheet('hippoEat', 'images/hippo_eat_sprite.png', 181, 150, 5)
   },
 
   create: function() {
     // actually should go to title state
-    // this.state.start('PlayState')
+    this.state.start('TitleState')
   }
 }
-var TitleState = {}
+var TitleState = {
+  create: function(){
+    var background = this.game.add.sprite(0,0, 'background')
+    background.inputEnabled = true
+
+    background.events.onInputDown.add(function(){
+      this.state.start('PlayState')
+    }, this)
+  }
+}
 var PlayState = {
+
+  sprites = [
+    'broccoli',
+    'ham',
+    'meat',
+    'chili'
+  ],
 
   //execute everything
   create: function() {
@@ -76,11 +94,15 @@ var PlayState = {
     this.health = this.game.add.sprite(120, 10, 'health')
     this.broccoli = this.game.add.sprite(50,550, 'broccoli')
     this.broccoli.anchor.setTo(0.5)
-    this.meat = this.game.add.sprite(150,550, 'meat')
+    this.ham = this.game.add.sprite(135,550, 'ham')
+    this.ham.anchor.setTo(0.5)
+    this.meat = this.game.add.sprite(195,550, 'meat')
     this.meat.anchor.setTo(0.5)
+    this.chili = this.game.add.sprite(300,550, 'chili')
+    this.chili.anchor.setTo(0.5)
     this.hippo = this.game.add.sprite(200, 450, 'hippoEat')
     this.hippo.anchor.setTo(0.5)
-    this.rotateBtn = this.game.add.sprite(250, 550, 'rotateBtn')
+    this.rotateBtn = this.game.add.sprite(350, 550, 'rotateBtn')
     this.rotateBtn.anchor.setTo(0.5)
 
     //spritesheet animation
