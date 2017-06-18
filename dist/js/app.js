@@ -64,7 +64,7 @@ var LoadState = {
 
   create: function() {
     // actually should go to title state
-    // this.state.start('PlayState')
+    this.state.start('PlayState')
   }
 }
 var TitleState = {}
